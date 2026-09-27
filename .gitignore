@@ -6,9 +6,8 @@ __pycache__/
 .Python
 env/
 build/
-develop-eggs/
-dist/
-downloads/
+/dist/
+!frontend/dist/
 eggs/
 .eggs/
 lib/
@@ -27,8 +26,6 @@ ENV/
 # Node / Frontend
 node_modules/
 frontend/node_modules/
-dist/
-frontend/dist/
 *.local
 .npm
 .eslintcache
