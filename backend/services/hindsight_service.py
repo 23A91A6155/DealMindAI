@@ -67,22 +67,25 @@ class HindsightService:
             return False
 
         try:
-            # Use httpx or client get_bank_config
-            async with httpx.AsyncClient(timeout=5.0) as http:
-                headers = {"Authorization": f"Bearer {self.api_key}"}
-                resp = await http.get(f"{self.api_url}/v1/banks/{self.bank_id}", headers=headers)
-                if resp.status_code in [200, 201]:
-                    self.is_connected = True
+            def _check():
+                try:
+                    self.client.get_bank_config(bank_id=self.bank_id)
                     return True
-                elif resp.status_code == 404:
-                    # Bank might not exist yet, attempt creation
-                    created = await self.create_or_initialize_bank()
-                    self.is_connected = created
-                    return created
-                else:
-                    logger.warning(f"Hindsight connectivity check returned HTTP {resp.status_code}: {resp.text}")
-                    self.is_connected = False
+                except Exception as ex:
+                    if "404" in str(ex) or "not found" in str(ex).lower():
+                        try:
+                            self.client.create_bank(
+                                bank_id=self.bank_id,
+                                name="DealMind AI Sales Memory Bank"
+                            )
+                            return True
+                        except Exception:
+                            return False
                     return False
+
+            connected = await asyncio.to_thread(_check)
+            self.is_connected = connected
+            return connected
         except Exception as e:
             logger.warning(f"Hindsight connection test failed: {e}")
             self.is_connected = False
