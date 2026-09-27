@@ -43,15 +43,17 @@ export function App() {
     loadInitialData();
   }, []);
 
-  const loadInitialData = async () => {
-    setLoadError(null);
-    setIsLoading(true);
-    setLoadSeconds(0);
+  const loadInitialData = async (isBackground = false) => {
+    if (!isBackground) {
+      setLoadError(null);
+      setIsLoading(true);
+      setLoadSeconds(0);
 
-    if (timerRef.current) clearInterval(timerRef.current);
-    timerRef.current = setInterval(() => {
-      setLoadSeconds((s) => s + 1);
-    }, 1000);
+      if (timerRef.current) clearInterval(timerRef.current);
+      timerRef.current = setInterval(() => {
+        setLoadSeconds((s) => s + 1);
+      }, 1000);
+    }
 
     try {
       const [custs, health, status] = await Promise.all([
@@ -68,13 +70,19 @@ export function App() {
         const mems = await fetchTimeline(custs[0].id);
         setRecentMemories(mems);
       }
-      setIsLoading(false);
+      if (!isBackground) {
+        setIsLoading(false);
+      }
     } catch (err: any) {
       console.error('Initial data loading failed, checking retry:', err);
-      setLoadError(err?.message || 'Server is taking longer than expected to wake up.');
-      setIsLoading(false);
+      if (!isBackground) {
+        setLoadError(err?.message || 'Server is taking longer than expected to wake up.');
+        setIsLoading(false);
+      }
     } finally {
-      if (timerRef.current) clearInterval(timerRef.current);
+      if (!isBackground && timerRef.current) {
+        clearInterval(timerRef.current);
+      }
     }
   };
 
@@ -174,7 +182,7 @@ export function App() {
                   </p>
                 </div>
                 <button
-                  onClick={loadInitialData}
+                  onClick={() => loadInitialData(false)}
                   className="px-5 py-2.5 rounded-xl bg-brand-600 hover:bg-brand-500 text-white font-medium text-xs shadow-lg shadow-brand-500/20 transition-all flex items-center gap-2 mx-auto cursor-pointer"
                 >
                   <RefreshCw className="w-4 h-4 animate-spin-slow" />
@@ -238,7 +246,7 @@ export function App() {
               {activeTab === 'insights' && <InsightsView />}
 
               {activeTab === 'demo' && (
-                <DemoView onRefreshGlobalData={loadInitialData} />
+                <DemoView onRefreshGlobalData={() => loadInitialData(true)} />
               )}
 
               {activeTab === 'settings' && (
@@ -269,7 +277,7 @@ export function App() {
         onClose={() => setIsAddInteractionOpen(false)}
         customers={customers}
         selectedCustomerId={selectedCustomerId}
-        onInteractionAdded={loadInitialData}
+        onInteractionAdded={() => loadInitialData(true)}
       />
     </div>
   );
