@@ -14,6 +14,15 @@ async def setup_db_and_memories():
     yield
 
 @pytest.mark.asyncio
+async def test_root_health():
+    async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
+        response = await ac.get("/health")
+        assert response.status_code == 200
+        data = response.json()
+        assert data["status"] == "ok"
+        assert "DealMind AI Backend" in data["service"]
+
+@pytest.mark.asyncio
 async def test_health_check():
     async with AsyncClient(transport=ASGITransport(app=app), base_url="http://test") as ac:
         response = await ac.get("/api/health")

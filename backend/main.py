@@ -1,10 +1,13 @@
+import os
 import logging
+from pathlib import Path
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
 
-from backend.config import BACKEND_HOST, BACKEND_PORT
+from backend.config import BACKEND_HOST, BACKEND_PORT, FRONTEND_URL
 from backend.database.db import init_db
 from backend.database.seed_data import seed_database, INITIAL_INTERACTIONS
 from backend.services.hindsight_service import hindsight_service
@@ -48,25 +51,39 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# CORS configuration for local React dev server and production
+# CORS configuration supporting localhost and production frontend domains
+allowed_origins = [
+    "http://localhost:3000",
+    "http://localhost:5173",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:5173",
+]
+if FRONTEND_URL and FRONTEND_URL.strip() != "*":
+    for origin in FRONTEND_URL.split(","):
+        clean_origin = origin.strip().rstrip("/")
+        if clean_origin and clean_origin not in allowed_origins:
+            allowed_origins.append(clean_origin)
+else:
+    allowed_origins = ["*"]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=allowed_origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Register API Routers
-app.include_router(customers_router)
-app.include_router(memories_router)
-app.include_router(demo_router)
-app.include_router(insights_router)
-app.include_router(search_router)
+# Root production health check required by deployment platforms (Render, Railway, AWS, GCP)
+@app.get("/health")
+async def root_health():
+    """Simple health check endpoint required by deployment platforms."""
+    return {"status": "ok", "service": "DealMind AI Backend"}
 
+# Detailed API health check
 @app.get("/api/health")
 async def health_check():
-    """Health check endpoint for container and uptime monitors."""
+    """Health check endpoint reporting Hindsight connectivity and memory units."""
     status = hindsight_service.get_status()
     return {
         "status": "healthy",
@@ -79,6 +96,19 @@ async def health_check():
         }
     }
 
+# Register API Routers
+app.include_router(customers_router)
+app.include_router(memories_router)
+app.include_router(demo_router)
+app.include_router(insights_router)
+app.include_router(search_router)
+
+# Mount frontend/dist for unified full-stack single-service deployment if built
+dist_dir = Path(__file__).resolve().parent.parent / "frontend" / "dist"
+if dist_dir.exists():
+    logger.info(f"Mounting production frontend build from {dist_dir}")
+    app.mount("/", StaticFiles(directory=str(dist_dir), html=True), name="static")
+
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run("backend.main:app", host=BACKEND_HOST, port=BACKEND_PORT, reload=True)
+    uvicorn.run("backend.main:app", host=BACKEND_HOST, port=BACKEND_PORT, reload=False)

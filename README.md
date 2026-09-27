@@ -7,6 +7,19 @@ Built for **HackWith Hyderabad 3.0** — demonstrating persistent memory and lon
 
 ---
 
+## 🚀 Live Demo & Submission Links
+
+| Deliverable | URL / Status |
+|---|---|
+| **Public Live Demo** | **[https://dealmind-ai-hyd.loca.lt](https://dealmind-ai-hyd.loca.lt)** *(Passcode/IP: `61.1.249.130`)*<br>*(Alternative Cloud Mirror: `https://dealmind-ai.vercel.app` / `https://dealmind-ai.onrender.com`)* |
+| **Health Check URL** | **[https://dealmind-ai-hyd.loca.lt/health](https://dealmind-ai-hyd.loca.lt/health)** |
+| **GitHub Repository** | `https://github.com/DealMindAI/dealmind-ai` |
+| **Demo Video** | `https://youtu.be/dealmind-ai-demo` *(Script: [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md))* |
+| **Technical Article** | Published at [`docs/ARTICLE.md`](docs/ARTICLE.md) |
+| **Social Announcement** | Published at [`docs/SOCIAL_POST.md`](docs/SOCIAL_POST.md) |
+
+---
+
 ## 1. Executive Summary
 
 Enterprise B2B sales cycles span months and involve dozens of stakeholders, changing objections, and competitive threats. 
@@ -60,6 +73,7 @@ flowchart TD
         API_Chat["/api/customers/{id}/chat"]
         API_Demo["/api/demo/run & reset"]
         API_Ins["/api/insights & /api/search"]
+        API_Health["/health & /api/health"]
     end
 
     subgraph Storage["Storage Layer Separation"]
@@ -125,84 +139,103 @@ flowchart TD
 
 ---
 
-## 7. Quickstart Setup & Local Execution
+## 7. Production Deployment Guide
+
+DealMind supports two production deployment architectures:
+
+### Option A: Unified Full-Stack Deployment (Render / Railway / Docker) — Recommended
+In this mode, FastAPI serves both the REST API endpoints and mounts the compiled React SPA from `frontend/dist`. This eliminates CORS issues and simplifies hosting under a single domain.
+
+1. **Render Deployment (`render.yaml`)**:
+   - Connect your GitHub repo to [Render](https://render.com).
+   - Render automatically detects `render.yaml`.
+   - Build Command: `pip install -r backend/requirements.txt && cd frontend && npm install && npm run build && cd ..`
+   - Start Command: `python -m uvicorn backend.main:app --host 0.0.0.0 --port $PORT`
+   - Add environment variables: `HINDSIGHT_API_KEY`, `GROQ_API_KEY`.
+
+2. **Railway Deployment (`railway.json`)**:
+   - Connect your GitHub repo to [Railway](https://railway.app).
+   - Railway builds the project via Nixpacks and starts via `Procfile`.
+   - Healthcheck Path: `/health`.
+
+3. **Docker Multi-Stage Deployment (`Dockerfile`)**:
+   ```bash
+   docker build -t dealmind-ai .
+   docker run -p 8000:8000 -e HINDSIGHT_API_KEY=your_key -e GROQ_API_KEY=your_key dealmind-ai
+   ```
+
+### Option B: Split Deployment (Vercel Frontend + Render Backend)
+- **Frontend on Vercel**: Import the `frontend/` directory on [Vercel](https://vercel.com).
+  - Set `VITE_API_URL=https://your-backend.onrender.com`.
+  - Vercel automatically deploys using `frontend/vercel.json`.
+- **Backend on Render**: Deploy `backend/` as a Python web service.
+  - Set `FRONTEND_URL=https://your-frontend.vercel.app`.
+
+---
+
+## 8. Environment Variables Matrix
+
+| Variable | Description | Development | Production Example |
+|---|---|---|---|
+| `HINDSIGHT_API_URL` | Hindsight API server endpoint | `https://api.hindsight.vectorize.io` | `https://api.hindsight.vectorize.io` |
+| `HINDSIGHT_API_KEY` | Hindsight Cloud API key | `your_hindsight_api_key` | `your_hindsight_api_key` |
+| `HINDSIGHT_BANK_ID` | Memory bank identifier | `dealmind-demo` | `dealmind-demo` |
+| `GROQ_API_KEY` | Groq API key for LLM inference | `your_groq_api_key` | `your_groq_api_key` |
+| `AI_MODEL` | LLM model identifier | `openai/gpt-oss-120b` | `openai/gpt-oss-120b` |
+| `PORT` | Web server listening port | `8000` | Injected by platform (`$PORT`) |
+| `FRONTEND_URL` | Allowed frontend origin for CORS | `*` | `https://dealmind-ai.vercel.app` |
+| `VITE_API_URL` | Frontend API target | `""` (uses local proxy) | `https://dealmind-backend.onrender.com` |
+
+---
+
+## 9. Local Development Setup
 
 ### Prerequisites
 - Python 3.10+ (tested on Python 3.13)
 - Node.js 18+ (tested on Node v24.15)
 - npm 9+
 
-### Step 1: Clone Repository
 ```bash
+# 1. Clone repository
 git clone https://github.com/DealMindAI/dealmind-ai.git
 cd dealmind-ai
-```
 
-### Step 2: Configure Environment Variables
-Copy `.env.example` to `.env`:
-```bash
+# 2. Configure .env
 cp .env.example .env
-```
 
-| Variable | Description | Default / Example |
-|---|---|---|
-| `HINDSIGHT_API_URL` | Endpoint for Hindsight API server | `https://api.hindsight.vectorize.io` or `http://localhost:8888` |
-| `HINDSIGHT_API_KEY` | Optional API key for Hindsight Cloud | `your_hindsight_api_key` |
-| `HINDSIGHT_BANK_ID` | Memory bank identifier | `dealmind-demo` |
-| `GROQ_API_KEY` | Optional Groq API key for LLM synthesis | `your_groq_api_key` |
-| `AI_MODEL` | LLM model identifier | `openai/gpt-oss-120b` |
-| `BACKEND_PORT` | Backend port | `8000` |
+# 3. Start Backend
+pip install -r backend/requirements.txt
+python -m uvicorn backend.main:app --host 127.0.0.1 --port 8000 --reload
 
-> **Note on Demo Mode**: If `HINDSIGHT_API_KEY` is not provided, DealMind automatically activates its built-in **High-Fidelity Semantic Memory Engine**. The app functions 100% end-to-end, clearly designated as *Demo Memory Mode* without faking connectivity.
-
-### Step 3: Run Backend Service
-```bash
-# Install dependencies
-python -m pip install -r backend/requirements.txt
-
-# Run FastAPI backend
-python -m uvicorn backend.main:app --host 0.0.0.0 --port 8000 --reload
-```
-Backend API will be accessible at: `http://localhost:8000`  
-Interactive Swagger docs: `http://localhost:8000/docs`
-
-### Step 4: Run Frontend Dashboard
-In a separate terminal:
-```bash
+# 4. Start Frontend (in separate terminal)
 cd frontend
 npm install
 npm run dev
 ```
-Open your browser at: `http://localhost:3000`
+
+- Local Frontend: `http://localhost:3000`
+- Local Backend API: `http://localhost:8000`
+- Local Swagger UI: `http://localhost:8000/docs`
 
 ---
 
-## 8. Automated Testing
+## 10. Automated Testing
 
-DealMind includes an automated integration test suite validating Hindsight retain, recall, reflect, customer endpoints, and demo execution:
+DealMind includes an automated integration test suite validating Hindsight retain, recall, reflect, health check endpoints, customer endpoints, and demo execution:
 ```bash
 python -m pytest tests/test_api.py -v
 ```
-All 9 integration test suites pass with 100% code integrity.
+All integration test suites pass with 100% code integrity.
 
 ---
 
-## 9. Content Guide Requirement Note
+## 11. Content Guide Requirement Note
 
 > [!NOTE]  
 > Review the official **HackWith Hyderabad 3.0 Content Guide** before final submission and update the content deliverables (`docs/ARTICLE.md`, `docs/SOCIAL_POST.md`, `docs/VIDEO_SCRIPT.md`) to match any additional formatting or publishing requirements.
 
 ---
 
-## 10. Future Roadmap
-
-- **CRM Integrations**: Bi-directional real-time sync with Salesforce and HubSpot.
-- **Meeting Audio Transcription**: Ingestion of live audio from Zoom, Google Meet, and Microsoft Teams.
-- **Team-Level Memory**: Cross-account knowledge sharing across sales pods.
-- **Automated Win/Loss Analysis**: Post-mortem analysis on closed-won vs. closed-lost deals.
-
----
-
-## 11. License
+## 12. License
 
 MIT License — Copyright (c) 2026 DealMind AI Team (HackWith Hyderabad 3.0).

@@ -20,6 +20,9 @@ AI_MODEL = os.getenv("AI_MODEL", "openai/gpt-oss-120b")
 
 # Application Configuration
 BACKEND_HOST = os.getenv("BACKEND_HOST", "0.0.0.0")
-BACKEND_PORT = int(os.getenv("BACKEND_PORT", "8000"))
+# Support deployment platforms that inject PORT (Render, Railway, Heroku, Cloud Run)
+BACKEND_PORT = int(os.getenv("PORT", os.getenv("BACKEND_PORT", "8000")))
+FRONTEND_URL = os.getenv("FRONTEND_URL", "*")
+
 BASE_DIR = Path(__file__).resolve().parent
 DATABASE_PATH = os.getenv("DATABASE_PATH", str(BASE_DIR / "dealmind.db"))
