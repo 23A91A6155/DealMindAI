@@ -1,0 +1,23 @@
+name: Keep DealMind AI Warm (Hackathon 24/7 Uptime)
+
+on:
+  schedule:
+    # Run every 10 minutes (Render free tier sleeps after 15 min idle)
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+jobs:
+  keep-warm:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping DealMind AI Cloud Deployment
+        run: |
+          echo "Sending keep-warm heartbeat to DealMind AI live service..."
+          RESPONSE=$(curl -s -w "\nHTTP_STATUS:%{http_code}" "https://dealmind-ai-vitp.onrender.com/api/health")
+          echo "$RESPONSE"
+          STATUS=$(echo "$RESPONSE" | grep "HTTP_STATUS" | cut -d':' -f2)
+          if [ "$STATUS" -eq 200 ]; then
+            echo "SUCCESS: DealMind AI is WARM and healthy! Hindsight memory bank is responsive."
+          else
+            echo "Cold-start or retry needed. HTTP status: $STATUS"
+          fi
