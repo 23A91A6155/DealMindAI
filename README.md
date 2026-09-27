@@ -11,9 +11,9 @@ Built for **HackWith Hyderabad 3.0** — demonstrating persistent memory and lon
 
 | Deliverable | URL / Status |
 |---|---|
-| **Public Live Demo** | **[https://dealmind-ai-hyd.loca.lt](https://dealmind-ai-hyd.loca.lt)** *(Passcode/IP: `61.1.249.130`)*<br>*(Alternative Cloud Mirror: `https://dealmind-ai.vercel.app` / `https://dealmind-ai.onrender.com`)* |
-| **Health Check URL** | **[https://dealmind-ai-hyd.loca.lt/health](https://dealmind-ai-hyd.loca.lt/health)** |
-| **GitHub Repository** | `https://github.com/DealMindAI/dealmind-ai` |
+| **Public Live Demo** | **[https://dealmind-ai-vitp.onrender.com](https://dealmind-ai-vitp.onrender.com)** |
+| **Health Check URL** | **[https://dealmind-ai-vitp.onrender.com/api/health](https://dealmind-ai-vitp.onrender.com/api/health)** *(Live Hindsight Connected)* |
+| **GitHub Repository** | **[https://github.com/23A91A6155/DealMindAI](https://github.com/23A91A6155/DealMindAI)** |
 | **Demo Video** | `https://youtu.be/dealmind-ai-demo` *(Script: [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md))* |
 | **Technical Article** | Published at [`docs/ARTICLE.md`](docs/ARTICLE.md) |
 | **Social Announcement** | Published at [`docs/SOCIAL_POST.md`](docs/SOCIAL_POST.md) |
