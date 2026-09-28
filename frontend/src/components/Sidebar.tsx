@@ -7,6 +7,7 @@ import {
   Sparkles,
   GitBranch,
   TrendingUp,
+  Award,
   PlayCircle,
   Settings,
   PlusCircle
@@ -31,9 +32,11 @@ export const Sidebar: React.FC<Props> = ({
     { id: 'briefing', label: 'AI Briefing', icon: Sparkles, badge: 'Hindsight' },
     { id: 'timeline', label: 'Memory Timeline', icon: GitBranch, highlight: true },
     { id: 'insights', label: 'AI Insights', icon: TrendingUp },
+    { id: 'evaluation', label: 'Evaluation Suite', icon: Award, badge: 'Benchmark' },
     { id: 'demo', label: 'Learning Demo', icon: PlayCircle, badge: 'Judge Demo' },
     { id: 'settings', label: 'Settings', icon: Settings },
   ];
+
 
   return (
     <aside className="w-64 bg-slate-900 border-r border-slate-800 flex flex-col shrink-0">

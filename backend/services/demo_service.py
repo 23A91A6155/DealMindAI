@@ -13,7 +13,7 @@ class DemoService:
     """
 
     def get_before_vs_after(self) -> BeforeVsAfter:
-        """Returns the side-by-side comparison of Generic AI vs DealMind with Hindsight."""
+        """Returns the side-by-side comparison of Generic AI vs DealMind Hindsight vs Outcome-Aware Copilot."""
         return BeforeVsAfter(
             scenario="Preparing strategy for upcoming executive meeting with Acme Corp",
             generic_ai=(
@@ -26,13 +26,28 @@ class DemoService:
                 "address implementation downtime risk with our blue/green cutover SLA, and propose an annual flat fee to solve "
                 "Procurement VP David Keller's budget objections."
             ),
+            outcome_aware_dealmind=(
+                "STRATEGY CHANGED BECAUSE:\n"
+                "• Standard ROI presentation previously failed with David Keller (Procurement VP) on 2026-03-02 because it omitted internal engineering labor amortization.\n"
+                "• DO NOT re-pitch standard ROI slides. Pivot to Fixed $180k Turnkey Package with upfront labor guarantee.\n"
+                "• Address Sarah Lin's detected contradiction: shifted from 'flexible weekend cutover' to 'zero-tolerance manufacturing downtime'.\n"
+                "• Lead with Blue/Green Zero-Downtime Architecture and provide CTO Marcus Vance with SOC2 Type II compliance audit reports."
+            ),
             supporting_memories=[
                 "Sep 18: Evaluating Competitor X for cloud ERP migration",
                 "Sep 20: CTO Marcus Vance requires SOC2/ISO 27001 & fears downtime",
                 "Sep 23: Procurement VP David Keller flagged $180k cost & wants annual flat fee",
-                "Sep 25: 4.2x manufacturing ROI case study received enthusiastic stakeholder praise"
+                "Sep 25: 4.2x manufacturing ROI case study received enthusiastic stakeholder praise",
+                "Mar 02: Strategy attempt 'Standard ROI Presentation' logged UNSUCCESSFUL with Procurement (labor omission)",
+                "Mar 10: Contradiction detected in VP Operations cutover tolerance"
+            ],
+            strategy_reasons=[
+                "Prevented repeating failed standard ROI pitch (Outcome confidence: 92%)",
+                "Adapted cutover schedule to resolve manufacturing contradiction",
+                "Auto-grounded recommendations against 6 verified Hindsight memory citations"
             ]
         )
+
 
     async def run_full_demo_sequence(self) -> List[DemoStep]:
         """
@@ -96,14 +111,19 @@ class DemoService:
                 "input_text": "How should I approach my next meeting with Acme Corp?",
                 "action_type": "reflect",
                 "agent_output": (
-                    "🎯 **DealMind Memory-Powered Strategic Gameplan for Acme Corp**:\n\n"
-                    "1. **Lead With Proven Financial ROI**: Start the meeting with a tailored 4.2x payback migration analysis. Acme responded positively to hard financial data in previous interactions.\n"
-                    "2. **Address Migration Cost Proactively**: Do not wait for Procurement to raise the cost objection again. Present our bundled migration engineering package with fixed pricing.\n"
-                    "3. **Neutralize Competitor X via Security**: Present our SOC2 Type II and ISO 27001 compliance packet to satisfy CTO Marcus Vance's mandate, contrasting our blue/green zero-downtime architecture against Competitor X.\n"
-                    "4. **Mitigate Implementation Risk**: Guarantee a zero-downtime cutover window backed by our enterprise SLA to relieve engineering fears."
+                    "🎯 **DealMind Outcome-Aware Strategic Gameplan for Acme Corp**:\n\n"
+                    "⚡ **STRATEGY CHANGED BECAUSE**:\n"
+                    "• Standard ROI Presentation previously failed with Procurement VP David Keller because internal labor amortization was missing.\n"
+                    "• Sarah Lin shifted from flexible weekend maintenance to a strict zero-downtime manufacturing floor mandate (Contradiction Confirmed).\n"
+                    "• **Action Rule**: DO NOT re-pitch standard slides. Pivot to Fixed Turnkey Packaging ($180k cap) + Blue/Green Zero-Downtime SLA.\n\n"
+                    "1. **Pivot to Fixed-Fee Turnkey Package**: Open with a bundled $180k all-inclusive migration plan addressing David Keller's previous rejection.\n"
+                    "2. **Blue/Green Zero-Downtime SLA**: Walk through the architectural diagram guaranteeing zero factory shift interruption to resolve Sarah Lin's concern.\n"
+                    "3. **Neutralize Competitor X via Security**: Deliver SOC2 Type II and ISO 27001 packet directly for CTO Marcus Vance.\n"
+                    "4. **Verified Memory Citations**: Grounded in 6 verified interactions (Sep 18, Sep 20, Sep 23, Sep 25, Mar 02, Mar 10)."
                 ),
                 "memory_retained": None
             }
+
         ]
 
         # Execute retention in Hindsight service

@@ -5,7 +5,7 @@ from fastapi import APIRouter, HTTPException, Depends
 from backend.database.db import get_db
 from backend.models.schemas import (
     Customer, CustomerCreate, Interaction, InteractionCreate,
-    DealBriefing, ChatRequest, ChatResponse, MemoryUnit
+    DealBriefing, ChatRequest, ChatResponse, MemoryUnit, AccountMemoryHealth
 )
 from backend.services.hindsight_service import hindsight_service
 from backend.services.ai_service import ai_service
@@ -238,3 +238,77 @@ async def ask_dealmind_chat(customer_id: str, payload: ChatRequest):
     history_dicts = [h.model_dump() for h in payload.history] if payload.history else []
     response = await ai_service.answer_dealmind_chat(customer.model_dump(), payload.message, history_dicts)
     return response
+
+@router.get("/{customer_id}/health", response_model=AccountMemoryHealth)
+async def get_customer_memory_health(customer_id: str):
+    """
+    Account Memory Health:
+    Calculates meetings count, stored memories, known stakeholders, unresolved objections,
+    tracked strategy outcomes, contradictions, and status rating (FRESH, NEEDS_REVIEW, OUTDATED, INSUFFICIENT_DATA).
+    """
+    customer = await get_customer(customer_id)
+    timeline = await hindsight_service.get_customer_memory_timeline(customer_id)
+
+    async with get_db() as db:
+        meetings_count = (await (await db.execute(
+            "SELECT COUNT(*) FROM interactions WHERE customer_id = ?", (customer_id,)
+        )).fetchone())[0]
+
+        stakeholders_count = (await (await db.execute(
+            "SELECT COUNT(*) FROM stakeholder_nodes WHERE customer_id = ?", (customer_id,)
+        )).fetchone())[0]
+
+        strat_rows = await (await db.execute(
+            "SELECT * FROM strategies WHERE customer_id = ?", (customer_id,)
+        )).fetchall()
+
+        contra_rows = await (await db.execute(
+            "SELECT * FROM contradictions WHERE customer_id = ?", (customer_id,)
+        )).fetchall()
+
+    strat_total = len(strat_rows)
+    strat_successful = sum(1 for s in strat_rows if s["observed_outcome"] == "SUCCESSFUL")
+    strat_unsuccessful = sum(1 for s in strat_rows if s["observed_outcome"] == "UNSUCCESSFUL")
+
+    contra_total = len(contra_rows)
+    unreviewed_contra = sum(1 for c in contra_rows if c["status"] == "UNREVIEWED" or c["status"] == "NEEDS_CLARIFICATION")
+
+    unresolved_objs = len(customer.known_objections)
+
+    # Determine status rating based on documented rules
+    last_update = timeline[-1].timestamp if timeline else "None"
+    
+    if meetings_count < 2:
+        status = "INSUFFICIENT_DATA"
+        reason = "Account has fewer than 2 documented interactions. Memory foundation is still early."
+        warning = "Initial briefing recommendations will rely on broad industry defaults."
+    elif unreviewed_contra > 0:
+        status = "NEEDS_REVIEW"
+        reason = f"{unreviewed_contra} statement shift or contradiction requires verification before submitting commercial terms."
+        warning = "Briefing contains potential conflicting information from customer stakeholders."
+    elif unresolved_objs >= 3 and strat_unsuccessful > strat_successful:
+        status = "NEEDS_REVIEW"
+        reason = "Multiple unresolved objections detected with prior unsuccessful strategy attempts."
+        warning = "Prior strategy approaches failed; pivot to alternative evidence recommended."
+    else:
+        status = "FRESH"
+        reason = f"Active memory coverage across {meetings_count} meetings, {len(timeline)} memories, and {strat_successful} verified strategy outcomes."
+        warning = None
+
+    return AccountMemoryHealth(
+        customer_id=customer_id,
+        customer_name=customer.name,
+        meetings_count=meetings_count,
+        memories_count=len(timeline),
+        stakeholders_count=stakeholders_count,
+        unresolved_objections_count=unresolved_objs,
+        strategy_outcomes_count=strat_total,
+        successful_strategies_count=strat_successful,
+        unsuccessful_strategies_count=strat_unsuccessful,
+        contradictions_count=contra_total,
+        unreviewed_contradictions_count=unreviewed_contra,
+        last_memory_update=last_update,
+        memory_status=status,
+        status_reason=reason,
+        warning=warning
+    )

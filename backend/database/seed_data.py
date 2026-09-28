@@ -408,78 +408,383 @@ INITIAL_INTERACTIONS = [
         "importance": "High"
     }
 ]
+INITIAL_STRATEGIES = [
+    {
+        "id": "strat-acme-1",
+        "customer_id": "cust-acme",
+        "interaction_id": "int-3",
+        "stakeholder_id": "cnt-3",
+        "stakeholder_name": "David Keller (VP Procurement)",
+        "strategy_type": "ROI presentation",
+        "strategy_description": "Presented a verified 4.2x peer ROI payback analysis across a 3-year migration lifecycle.",
+        "objection_addressed": "Upfront implementation and professional services costs",
+        "supporting_materials": "Automotive Manufacturing Peer Modernization TCO Whitepaper",
+        "date_attempted": "2026-08-28",
+        "salesperson_notes": "Keller was skeptical initially of hourly rate cards. Emphasized amortized total cost of ownership.",
+        "customer_response": "Procurement requested formal proposal with fixed annual packaging rather than variable billing.",
+        "observed_outcome": "SUCCESSFUL",
+        "outcome_confidence": 0.94,
+        "evidence_references": ["int-3", "mem-cust-acme-3"],
+        "follow_up_actions": "Deliver fixed-fee Statement of Work with capped migration engineering hours."
+    },
+    {
+        "id": "strat-acme-2",
+        "customer_id": "cust-acme",
+        "interaction_id": "int-4",
+        "stakeholder_id": "cnt-1",
+        "stakeholder_name": "Sarah Lin (VP Engineering)",
+        "strategy_type": "Discount negotiation",
+        "strategy_description": "Attempted 15% upfront discount incentive if contract executed by end of Q3 without architectural review.",
+        "objection_addressed": "Budget envelope and purchase timeline",
+        "supporting_materials": "End-of-Quarter Enterprise Pricing Schedule",
+        "date_attempted": "2026-09-12",
+        "salesperson_notes": "Tried to accelerate closing velocity using price discounting.",
+        "customer_response": "Sarah Lin firmly pushed back. Emphasized that pricing is secondary to zero downtime guarantees on the shop floor.",
+        "observed_outcome": "UNSUCCESSFUL",
+        "outcome_confidence": 0.92,
+        "evidence_references": ["int-4", "mem-cust-acme-4"],
+        "follow_up_actions": "Never offer price concessions without architectural cutover assurance."
+    },
+    {
+        "id": "strat-acme-3",
+        "customer_id": "cust-acme",
+        "interaction_id": "int-2",
+        "stakeholder_id": "cnt-1",
+        "stakeholder_name": "Sarah Lin & Marcus Vance",
+        "strategy_type": "Technical case study",
+        "strategy_description": "Walked through blue/green zero-downtime cutover architecture with peer industrial manufacturing case study.",
+        "objection_addressed": "Manufacturing shop floor downtime and cutover risks",
+        "supporting_materials": "Live Automated Cutover Architecture Diagram & Failover Logs",
+        "date_attempted": "2026-08-14",
+        "salesperson_notes": "Focused heavily on technical evidence instead of marketing pitch deck.",
+        "customer_response": "Marcus Vance agreed that blue/green architecture mitigates primary operational risks.",
+        "observed_outcome": "SUCCESSFUL",
+        "outcome_confidence": 0.96,
+        "evidence_references": ["int-2", "mem-cust-acme-2"],
+        "follow_up_actions": "Provide SOC2 Type II and ISO 27001 audit attestation packet."
+    },
+    {
+        "id": "strat-acme-4",
+        "customer_id": "cust-acme",
+        "interaction_id": "int-5",
+        "stakeholder_id": "cnt-2",
+        "stakeholder_name": "Marcus Vance (CTO)",
+        "strategy_type": "Competitor comparison",
+        "strategy_description": "Contrasted native Hindsight persistent memory against Competitor X batch sync and legacy maintenance costs.",
+        "objection_addressed": "Active RFP evaluation of Competitor X",
+        "supporting_materials": "Feature & Architectural Matrix: DealMind vs Competitor X",
+        "date_attempted": "2026-09-22",
+        "salesperson_notes": "Marcus acknowledged Competitor X has high maintenance overhead, but requested verified security attestation.",
+        "customer_response": "Acknowledged differentiation; deferred final sign-off pending security certification review.",
+        "observed_outcome": "PARTIALLY_SUCCESSFUL",
+        "outcome_confidence": 0.88,
+        "evidence_references": ["int-5", "mem-cust-acme-5"],
+        "follow_up_actions": "Send SOC2 Type II audit report directly to CISO & Marcus Vance."
+    },
+    {
+        "id": "strat-technova-1",
+        "customer_id": "cust-technova",
+        "interaction_id": "int-6",
+        "stakeholder_id": "cnt-4",
+        "stakeholder_name": "Dr. Aris Thorne (Head of Infrastructure)",
+        "strategy_type": "Pilot proposal",
+        "strategy_description": "Offered a 14-day dedicated GPU cluster latency benchmark comparing response times against InferaCloud.",
+        "objection_addressed": "Latency and throughput headroom concerns",
+        "supporting_materials": "OpenAPI / Terraform Benchmark Repository",
+        "date_attempted": "2026-09-18",
+        "salesperson_notes": "Aris ran real model inference workloads; measured 14ms vs InferaCloud 28ms.",
+        "customer_response": "Aris expressed high satisfaction with benchmark results.",
+        "observed_outcome": "SUCCESSFUL",
+        "outcome_confidence": 0.95,
+        "evidence_references": ["int-6"],
+        "follow_up_actions": "Structure monthly rolling billing terms with VP Product Elena Rostov."
+    },
+    {
+        "id": "strat-vertex-1",
+        "customer_id": "cust-vertex",
+        "interaction_id": "int-10",
+        "stakeholder_id": "cnt-8",
+        "stakeholder_name": "Victoria Sterling (Chief Risk Officer)",
+        "strategy_type": "Security reassurance",
+        "strategy_description": "Demonstrated customer-managed VPC enclave with cryptographic zero-egress audit verification.",
+        "objection_addressed": "Cloud egress of raw PII financial payload",
+        "supporting_materials": "Cryptographic Non-Egress Whitepaper & Architecture Spec",
+        "date_attempted": "2026-09-21",
+        "salesperson_notes": "Victoria praised isolated architecture; eliminated multi-tenant cloud risk.",
+        "customer_response": "Risk office cleared architecture; advanced deal to formal MSA negotiation.",
+        "observed_outcome": "SUCCESSFUL",
+        "outcome_confidence": 0.98,
+        "evidence_references": ["int-10"],
+        "follow_up_actions": "Resolve standard master service agreement indemnification clause."
+    }
+]
+
+INITIAL_STAKEHOLDERS = [
+    {
+        "id": "stk-acme-1",
+        "customer_id": "cust-acme",
+        "name": "Marcus Vance",
+        "role": "Chief Technology Officer",
+        "email": "m.vance@acmecorp.com",
+        "influence_level": "High",
+        "decision_power": "Decision Maker",
+        "priorities": ["Zero downtime cutover", "ISO 27001 & SOC2 Type II compliance", "Long-term architectural stability"],
+        "objections": ["Migration complexity", "Vendor lock-in"],
+        "preferences": ["Architecture whitepapers", "Verifiable security audits", "Technical peer references"],
+        "relationships": [{"target": "Sarah Lin", "type": "supervises"}, {"target": "David Keller", "type": "peer_executive"}],
+        "last_interaction_date": "2026-09-22"
+    },
+    {
+        "id": "stk-acme-2",
+        "customer_id": "cust-acme",
+        "name": "Sarah Lin",
+        "role": "VP of Engineering",
+        "email": "sarah.lin@acmecorp.com",
+        "influence_level": "High",
+        "decision_power": "Technical Evaluator",
+        "priorities": ["Manufacturing shop floor operational continuity", "Low-latency API integration", "Developer ergonomics"],
+        "objections": ["Transition downtime", "Complex cutover procedures"],
+        "preferences": ["Live technical demos", "Engineering peer references", "Blue/green deployment models"],
+        "relationships": [{"target": "Marcus Vance", "type": "reports_to"}],
+        "last_interaction_date": "2026-09-12"
+    },
+    {
+        "id": "stk-acme-3",
+        "customer_id": "cust-acme",
+        "name": "David Keller",
+        "role": "VP of Procurement",
+        "email": "dkeller@acmecorp.com",
+        "influence_level": "Medium",
+        "decision_power": "Procurement Stakeholder",
+        "priorities": ["Predictable fixed-fee pricing", "Clear ROI payback schedule", "Contractual liability caps"],
+        "objections": ["Upfront professional services fees", "Uncapped variable cost overruns"],
+        "preferences": ["Multi-year amortized TCO models", "Fixed-fee milestone packaging"],
+        "relationships": [{"target": "Marcus Vance", "type": "executive_peer"}],
+        "last_interaction_date": "2026-08-28"
+    },
+    {
+        "id": "stk-technova-1",
+        "customer_id": "cust-technova",
+        "name": "Dr. Aris Thorne",
+        "role": "Head of Infrastructure",
+        "email": "aris@technova.io",
+        "influence_level": "High",
+        "decision_power": "Decision Maker",
+        "priorities": ["Sub-20ms inference latency", "Terraform-first APIs", "GPU cluster headroom"],
+        "objections": ["Pricing markup on compute hours"],
+        "preferences": ["CLI/Terraform developer ergonomics", "Direct latency benchmarks"],
+        "relationships": [{"target": "Elena Rostov", "type": "co_lead"}],
+        "last_interaction_date": "2026-09-18"
+    },
+    {
+        "id": "stk-technova-2",
+        "customer_id": "cust-technova",
+        "name": "Elena Rostov",
+        "role": "VP of Product",
+        "email": "elena@technova.io",
+        "influence_level": "Medium",
+        "decision_power": "Evaluator",
+        "priorities": ["Monthly billing flexibility", "Quick time-to-market", "Zero annual commitment"],
+        "objections": ["Annual lock-in contracts"],
+        "preferences": ["Monthly rolling usage terms", "Self-service dashboard"],
+        "relationships": [{"target": "Dr. Aris Thorne", "type": "co_lead"}],
+        "last_interaction_date": "2026-09-08"
+    }
+]
+
+INITIAL_CONTRADICTIONS = [
+    {
+        "id": "contra-acme-1",
+        "customer_id": "cust-acme",
+        "topic": "Modernization Capital Expenditure Budget",
+        "earlier_statement": "David Keller (VP Procurement) confirmed the $180,000 modernization budget was fully approved for Q4 FY2026 deployment.",
+        "earlier_meeting_date": "2026-08-28",
+        "earlier_interaction_id": "int-3",
+        "latest_statement": "David Keller noted corporate finance has temporarily frozen non-essential capital expenditures pending Q3 earnings review.",
+        "latest_meeting_date": "2026-09-22",
+        "latest_interaction_id": "int-5",
+        "supporting_evidence": "Meeting note int-3 explicitly states 'budget approved'; meeting note int-5 states 'freeze on capital spending'.",
+        "confidence": 0.94,
+        "status": "NEEDS_CLARIFICATION",
+        "recommended_action": "Clarify with Sarah Lin whether the ERP cloud modernization is classified as an essential or non-essential capital expense before presenting final contract terms.",
+        "resolution_notes": None
+    },
+    {
+        "id": "contra-technova-1",
+        "customer_id": "cust-technova",
+        "topic": "Target Deployment Infrastructure",
+        "earlier_statement": "TechNova intends to host model inference exclusively on self-managed on-prem bare-metal clusters.",
+        "earlier_meeting_date": "2026-09-01",
+        "earlier_interaction_id": "int-technova-1",
+        "latest_statement": "Aris Thorne confirmed they are expanding inference endpoints into a hybrid model spanning AWS spot instances.",
+        "latest_meeting_date": "2026-09-18",
+        "latest_interaction_id": "int-technova-2",
+        "supporting_evidence": "Shift from pure bare-metal Kubernetes to hybrid AWS cloud integration.",
+        "confidence": 0.91,
+        "status": "CONFIRMED_CHANGE",
+        "recommended_action": "Update deployment architecture proposal to hybrid bare-metal/AWS configuration.",
+        "resolution_notes": "Confirmed by Aris Thorne during benchmark review call on Sept 18."
+    }
+]
+
+INITIAL_EXPERIMENTS = [
+    {
+        "id": "exp-acme-1",
+        "customer_id": "cust-acme",
+        "briefing_id": "brf-acme-init",
+        "recommended_strategy": "Lead meeting with fixed-fee migration engineering package and 4.2x peer ROI payback schedule to neutralize Procurement friction.",
+        "recommendation_date": "2026-09-24",
+        "attempted": True,
+        "attempt_date": "2026-09-25",
+        "stakeholder_name": "David Keller (VP Procurement)",
+        "customer_response": "David reacted favorably to fixed-fee cap and requested contract draft.",
+        "observed_outcome": "SUCCESSFUL",
+        "salesperson_notes": "Removing variable hourly rates unlocked stalled procurement review.",
+        "next_action": "Deliver formal Statement of Work with fixed professional services cap."
+    }
+]
 
 async def seed_database():
-    """Populate SQLite database with initial realistic records if empty."""
+    """Populates SQLite database with comprehensive enterprise B2B sales data and outcome records."""
     async with get_db() as db:
-        # Check if already seeded
-        cursor = await db.execute("SELECT COUNT(*) FROM customers")
-        count = (await cursor.fetchone())[0]
-        if count > 0:
-            logger.info("Database already seeded with customers.")
-            return
-
-        logger.info("Seeding SQLite database with realistic B2B sales data...")
-        for cust in INITIAL_CUSTOMERS:
-            await db.execute(
-                """
-                INSERT INTO customers (
-                    id, name, domain, overview, deal_value, deal_stage, deal_probability,
-                    snapshot_json, known_preferences_json, known_objections_json, competitors_mentioned_json
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                (
-                    cust["id"],
-                    cust["name"],
-                    cust["domain"],
-                    cust["overview"],
-                    cust["deal_value"],
-                    cust["deal_stage"],
-                    cust["deal_probability"],
-                    json.dumps(cust["snapshot"]),
-                    json.dumps(cust["known_preferences"]),
-                    json.dumps(cust["known_objections"]),
-                    json.dumps(cust["competitors_mentioned"])
-                )
-            )
-
-            # Insert contacts
-            for cnt in cust["contacts"]:
+        # Check if customers need seeding
+        c_count = (await (await db.execute("SELECT COUNT(*) FROM customers")).fetchone())[0]
+        if c_count == 0:
+            logger.info("Seeding SQLite database with customers, contacts, deals, and interactions...")
+            for cust in INITIAL_CUSTOMERS:
                 await db.execute(
-                    "INSERT INTO contacts (id, customer_id, name, role, email, priority) VALUES (?, ?, ?, ?, ?, ?)",
-                    (cnt["id"], cust["id"], cnt["name"], cnt["role"], cnt["email"], cnt["priority"])
+                    """
+                    INSERT INTO customers (
+                        id, name, domain, overview, deal_value, deal_stage, deal_probability,
+                        snapshot_json, known_preferences_json, known_objections_json, competitors_mentioned_json
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        cust["id"], cust["name"], cust["domain"], cust["overview"], cust["deal_value"],
+                        cust["deal_stage"], cust["deal_probability"], json.dumps(cust["snapshot"]),
+                        json.dumps(cust["known_preferences"]), json.dumps(cust["known_objections"]),
+                        json.dumps(cust["competitors_mentioned"])
+                    )
                 )
 
-            # Insert deals
-            for deal in cust["deals"]:
+                for cnt in cust["contacts"]:
+                    await db.execute(
+                        "INSERT INTO contacts (id, customer_id, name, role, email, priority) VALUES (?, ?, ?, ?, ?, ?)",
+                        (cnt["id"], cust["id"], cnt["name"], cnt["role"], cnt["email"], cnt["priority"])
+                    )
+
+                for deal in cust["deals"]:
+                    await db.execute(
+                        "INSERT INTO deals (id, customer_id, title, value, stage, probability) VALUES (?, ?, ?, ?, ?, ?)",
+                        (deal["id"], cust["id"], deal["title"], deal["value"], deal["stage"], deal["probability"])
+                    )
+
+            for inter in INITIAL_INTERACTIONS:
                 await db.execute(
-                    "INSERT INTO deals (id, customer_id, title, value, stage, probability) VALUES (?, ?, ?, ?, ?, ?)",
-                    (deal["id"], cust["id"], deal["title"], deal["value"], deal["stage"], deal["probability"])
+                    """
+                    INSERT INTO interactions (
+                        id, customer_id, contact_name, date, interaction_type, notes,
+                        outcome, objections_json, competitors_json, next_action, retained_memory
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        inter["id"], inter["customer_id"], inter["contact_name"], inter["date"],
+                        inter["interaction_type"], inter["notes"], inter["outcome"],
+                        json.dumps(inter["objections"]), json.dumps(inter["competitors"]),
+                        inter["next_action"], inter["retained_memory"]
+                    )
                 )
 
-        # Insert interactions
-        for inter in INITIAL_INTERACTIONS:
-            await db.execute(
-                """
-                INSERT INTO interactions (
-                    id, customer_id, contact_name, date, interaction_type, notes,
-                    outcome, objections_json, competitors_json, next_action, retained_memory
-                ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-                """,
-                (
-                    inter["id"],
-                    inter["customer_id"],
-                    inter["contact_name"],
-                    inter["date"],
-                    inter["interaction_type"],
-                    inter["notes"],
-                    inter["outcome"],
-                    json.dumps(inter["objections"]),
-                    json.dumps(inter["competitors"]),
-                    inter["next_action"],
-                    inter["retained_memory"]
+        # Seed Strategy DNA if empty
+        s_count = (await (await db.execute("SELECT COUNT(*) FROM strategies")).fetchone())[0]
+        if s_count == 0:
+            logger.info("Seeding Strategy DNA records...")
+            for strat in INITIAL_STRATEGIES:
+                await db.execute(
+                    """
+                    INSERT INTO strategies (
+                        id, customer_id, interaction_id, stakeholder_id, stakeholder_name,
+                        strategy_type, strategy_description, objection_addressed, supporting_materials,
+                        date_attempted, salesperson_notes, customer_response, observed_outcome,
+                        outcome_confidence, evidence_references_json, follow_up_actions
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        strat["id"], strat["customer_id"], strat["interaction_id"],
+                        strat["stakeholder_id"], strat["stakeholder_name"], strat["strategy_type"],
+                        strat["strategy_description"], strat["objection_addressed"],
+                        strat["supporting_materials"], strat["date_attempted"], strat["salesperson_notes"],
+                        strat["customer_response"], strat["observed_outcome"], strat["outcome_confidence"],
+                        json.dumps(strat["evidence_references"]), strat["follow_up_actions"]
+                    )
                 )
-            )
+
+        # Seed Stakeholder Nodes if empty
+        stk_count = (await (await db.execute("SELECT COUNT(*) FROM stakeholder_nodes")).fetchone())[0]
+        if stk_count == 0:
+            logger.info("Seeding Stakeholder Graph records...")
+            for stk in INITIAL_STAKEHOLDERS:
+                await db.execute(
+                    """
+                    INSERT INTO stakeholder_nodes (
+                        id, customer_id, name, role, email, influence_level, decision_power,
+                        priorities_json, objections_json, preferences_json, relationships_json,
+                        last_interaction_date
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        stk["id"], stk["customer_id"], stk["name"], stk["role"], stk["email"],
+                        stk["influence_level"], stk["decision_power"], json.dumps(stk["priorities"]),
+                        json.dumps(stk["objections"]), json.dumps(stk["preferences"]),
+                        json.dumps(stk["relationships"]), stk["last_interaction_date"]
+                    )
+                )
+
+        # Seed Contradictions if empty
+        c_contra_count = (await (await db.execute("SELECT COUNT(*) FROM contradictions")).fetchone())[0]
+        if c_contra_count == 0:
+            logger.info("Seeding Contradiction records...")
+            for contra in INITIAL_CONTRADICTIONS:
+                await db.execute(
+                    """
+                    INSERT INTO contradictions (
+                        id, customer_id, topic, earlier_statement, earlier_meeting_date,
+                        earlier_interaction_id, latest_statement, latest_meeting_date,
+                        latest_interaction_id, supporting_evidence, confidence, status,
+                        recommended_action, resolution_notes
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        contra["id"], contra["customer_id"], contra["topic"],
+                        contra["earlier_statement"], contra["earlier_meeting_date"],
+                        contra["earlier_interaction_id"], contra["latest_statement"],
+                        contra["latest_meeting_date"], contra["latest_interaction_id"],
+                        contra["supporting_evidence"], contra["confidence"], contra["status"],
+                        contra["recommended_action"], contra["resolution_notes"]
+                    )
+                )
+
+        # Seed Strategy Experiments if empty
+        exp_count = (await (await db.execute("SELECT COUNT(*) FROM strategy_experiments")).fetchone())[0]
+        if exp_count == 0:
+            logger.info("Seeding Strategy Experiments...")
+            for exp in INITIAL_EXPERIMENTS:
+                await db.execute(
+                    """
+                    INSERT INTO strategy_experiments (
+                        id, customer_id, briefing_id, recommended_strategy, recommendation_date,
+                        attempted, attempt_date, stakeholder_name, customer_response,
+                        observed_outcome, salesperson_notes, next_action
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    """,
+                    (
+                        exp["id"], exp["customer_id"], exp["briefing_id"],
+                        exp["recommended_strategy"], exp["recommendation_date"],
+                        1 if exp["attempted"] else 0, exp["attempt_date"], exp["stakeholder_name"],
+                        exp["customer_response"], exp["observed_outcome"], exp["salesperson_notes"],
+                        exp["next_action"]
+                    )
+                )
 
         await db.commit()
-        logger.info(f"Database seeded successfully with {len(INITIAL_CUSTOMERS)} customers and {len(INITIAL_INTERACTIONS)} interactions.")
+        logger.info("Database seeding complete.")

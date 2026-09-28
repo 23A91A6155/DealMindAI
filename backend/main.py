@@ -16,6 +16,11 @@ from backend.api.memories import router as memories_router
 from backend.api.demo import router as demo_router
 from backend.api.insights import router as insights_router
 from backend.api.search import router as search_router
+from backend.api.strategies import router as strategies_router
+from backend.api.stakeholders import router as stakeholders_router
+from backend.api.contradictions import router as contradictions_router
+from backend.api.evaluation import router as evaluation_router
+
 
 logging.basicConfig(
     level=logging.INFO,
@@ -102,6 +107,11 @@ app.include_router(memories_router)
 app.include_router(demo_router)
 app.include_router(insights_router)
 app.include_router(search_router)
+app.include_router(strategies_router)
+app.include_router(stakeholders_router)
+app.include_router(contradictions_router)
+app.include_router(evaluation_router)
+
 
 # Mount frontend/dist for unified full-stack single-service deployment if built
 dist_dir = Path(__file__).resolve().parent.parent / "frontend" / "dist"

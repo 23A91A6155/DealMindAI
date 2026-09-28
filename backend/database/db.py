@@ -77,6 +77,94 @@ async def init_db():
                 FOREIGN KEY (customer_id) REFERENCES customers (id)
             )
         """)
+
+        # Strategy DNA: outcome-aware historical strategy ledger
+        await db.execute("""
+            CREATE TABLE IF NOT EXISTS strategies (
+                id TEXT PRIMARY KEY,
+                customer_id TEXT NOT NULL,
+                interaction_id TEXT,
+                stakeholder_id TEXT,
+                stakeholder_name TEXT,
+                strategy_type TEXT NOT NULL,
+                strategy_description TEXT NOT NULL,
+                objection_addressed TEXT,
+                supporting_materials TEXT,
+                date_attempted TEXT NOT NULL,
+                salesperson_notes TEXT,
+                customer_response TEXT,
+                observed_outcome TEXT NOT NULL,
+                outcome_confidence REAL DEFAULT 0.85,
+                evidence_references_json TEXT,
+                follow_up_actions TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (customer_id) REFERENCES customers (id)
+            )
+        """)
+
+        # Stakeholder Graph: detailed stakeholder priority and relationship network
+        await db.execute("""
+            CREATE TABLE IF NOT EXISTS stakeholder_nodes (
+                id TEXT PRIMARY KEY,
+                customer_id TEXT NOT NULL,
+                name TEXT NOT NULL,
+                role TEXT NOT NULL,
+                email TEXT,
+                influence_level TEXT DEFAULT 'Medium',
+                decision_power TEXT DEFAULT 'Influencer',
+                priorities_json TEXT,
+                objections_json TEXT,
+                preferences_json TEXT,
+                relationships_json TEXT,
+                last_interaction_date TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (customer_id) REFERENCES customers (id)
+            )
+        """)
+
+        # Contradiction Checker: conflicting statements tracked over time
+        await db.execute("""
+            CREATE TABLE IF NOT EXISTS contradictions (
+                id TEXT PRIMARY KEY,
+                customer_id TEXT NOT NULL,
+                topic TEXT NOT NULL,
+                earlier_statement TEXT NOT NULL,
+                earlier_meeting_date TEXT,
+                earlier_interaction_id TEXT,
+                latest_statement TEXT NOT NULL,
+                latest_meeting_date TEXT,
+                latest_interaction_id TEXT,
+                supporting_evidence TEXT,
+                confidence REAL DEFAULT 0.9,
+                status TEXT NOT NULL,
+                recommended_action TEXT,
+                resolution_notes TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (customer_id) REFERENCES customers (id)
+            )
+        """)
+
+        # Strategy Experiments: feedback loop connecting briefings to real attempts & outcomes
+        await db.execute("""
+            CREATE TABLE IF NOT EXISTS strategy_experiments (
+                id TEXT PRIMARY KEY,
+                customer_id TEXT NOT NULL,
+                briefing_id TEXT,
+                recommended_strategy TEXT NOT NULL,
+                recommendation_date TEXT NOT NULL,
+                attempted BOOLEAN DEFAULT 0,
+                attempt_date TEXT,
+                stakeholder_name TEXT,
+                customer_response TEXT,
+                observed_outcome TEXT DEFAULT 'NOT_ATTEMPTED',
+                salesperson_notes TEXT,
+                next_action TEXT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (customer_id) REFERENCES customers (id)
+            )
+        """)
         
         await db.commit()
         logger.info("SQLite database tables initialized successfully.")

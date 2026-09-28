@@ -117,10 +117,15 @@ export interface DealBriefing {
   competitors_context: string[];
   what_worked_before: string[];
   recommended_strategy: string;
+  strategy_changed_because?: string;
+  historical_strategies_summary?: string;
+  contradictions_detected?: ContradictionRecord[];
   suggested_talking_points: string[];
   questions_to_ask: string[];
+  questions_to_verify?: string[];
   recommended_next_action: string;
   memories_used: string[];
+  memory_citations_detailed?: { id: string; memory: string; date?: string; category?: string }[];
   memory_count: number;
   confidence_score: number;
 }
@@ -174,8 +179,11 @@ export interface BeforeVsAfter {
   scenario: string;
   generic_ai: string;
   dealmind_hindsight: string;
+  outcome_aware_dealmind?: string;
   supporting_memories: string[];
+  strategy_reasons?: string[];
 }
+
 
 export interface HindsightStatus {
   connected: boolean;
@@ -203,3 +211,206 @@ export interface SearchResponse {
   memories: SearchResult[];
   total_results: number;
 }
+
+// ==========================================
+// Strategy DNA Interfaces
+// ==========================================
+
+export interface StrategyAttempt {
+  id: string;
+  customer_id: string;
+  interaction_id?: string;
+  stakeholder_id?: string;
+  stakeholder_name?: string;
+  strategy_type: string;
+  strategy_description: string;
+  objection_addressed?: string;
+  supporting_materials?: string;
+  date_attempted: string;
+  salesperson_notes?: string;
+  customer_response?: string;
+  observed_outcome: 'SUCCESSFUL' | 'UNSUCCESSFUL' | 'PARTIALLY_SUCCESSFUL' | 'INCONCLUSIVE' | 'NOT_ATTEMPTED';
+  outcome_confidence: number;
+  evidence_references: string[];
+  follow_up_actions?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface StrategyCreate {
+  customer_id: string;
+  interaction_id?: string;
+  stakeholder_id?: string;
+  stakeholder_name?: string;
+  strategy_type: string;
+  strategy_description: string;
+  objection_addressed?: string;
+  supporting_materials?: string;
+  date_attempted?: string;
+  salesperson_notes?: string;
+  customer_response?: string;
+  observed_outcome?: string;
+  outcome_confidence?: number;
+  evidence_references?: string[];
+  follow_up_actions?: string;
+}
+
+export interface StrategyUpdateOutcome {
+  customer_response?: string;
+  observed_outcome: string;
+  outcome_confidence?: number;
+  salesperson_notes?: string;
+  follow_up_actions?: string;
+}
+
+// ==========================================
+// Stakeholder Graph Interfaces
+// ==========================================
+
+export interface StakeholderNode {
+  id: string;
+  customer_id: string;
+  name: string;
+  role: string;
+  email?: string;
+  influence_level: 'High' | 'Medium' | 'Low';
+  decision_power: 'Decision Maker' | 'Champion' | 'Blocker' | 'Technical Evaluator' | 'Procurement' | 'End User';
+  priorities: string[];
+  objections: string[];
+  preferences: string[];
+  relationships: { target: string; type: string }[];
+  last_interaction_date?: string;
+  strategies_presented?: any[];
+}
+
+export interface StakeholderGraphData {
+  account_node: {
+    id: string;
+    label: string;
+    type: string;
+    deal_value: number;
+    stage: string;
+  };
+  nodes: {
+    id: string;
+    label: string;
+    role: string;
+    influence: string;
+    decision_power: string;
+    priorities_count: number;
+    objections_count: number;
+  }[];
+  edges: {
+    source: string;
+    target: string;
+    label: string;
+    type: string;
+  }[];
+}
+
+// ==========================================
+// Contradiction Checker Interfaces
+// ==========================================
+
+export interface ContradictionRecord {
+  id: string;
+  customer_id: string;
+  topic: string;
+  earlier_statement: string;
+  earlier_meeting_date?: string;
+  earlier_interaction_id?: string;
+  latest_statement: string;
+  latest_meeting_date?: string;
+  latest_interaction_id?: string;
+  supporting_evidence?: string;
+  confidence: number;
+  status: 'UNREVIEWED' | 'CONFIRMED_CHANGE' | 'NOT_A_CONTRADICTION' | 'NEEDS_CLARIFICATION' | 'RESOLVED';
+  recommended_action?: string;
+  resolution_notes?: string;
+  created_at?: string;
+  updated_at?: string;
+}
+
+export interface ContradictionUpdateStatus {
+  status: string;
+  resolution_notes?: string;
+}
+
+// ==========================================
+// Strategy Experiment Interfaces
+// ==========================================
+
+export interface StrategyExperiment {
+  id: string;
+  customer_id: string;
+  briefing_id?: string;
+  recommended_strategy: string;
+  recommendation_date: string;
+  attempted: boolean;
+  attempt_date?: string;
+  stakeholder_name?: string;
+  customer_response?: string;
+  observed_outcome: string;
+  salesperson_notes?: string;
+  next_action?: string;
+  created_at?: string;
+}
+
+export interface StrategyExperimentUpdate {
+  attempted: boolean;
+  attempt_date?: string;
+  stakeholder_name?: string;
+  customer_response?: string;
+  observed_outcome: string;
+  salesperson_notes?: string;
+  next_action?: string;
+}
+
+// ==========================================
+// Account Memory Health Interface
+// ==========================================
+
+export interface AccountMemoryHealth {
+  customer_id: string;
+  customer_name: string;
+  meetings_count: number;
+  memories_count: number;
+  stakeholders_count: number;
+  unresolved_objections_count: number;
+  strategy_outcomes_count: number;
+  successful_strategies_count: number;
+  unsuccessful_strategies_count: number;
+  contradictions_count: number;
+  unreviewed_contradictions_count: number;
+  last_memory_update?: string;
+  memory_status: 'FRESH' | 'NEEDS_REVIEW' | 'OUTDATED' | 'INSUFFICIENT_DATA';
+  status_reason: string;
+  warning?: string;
+}
+
+// ==========================================
+// Evaluation Benchmark Interfaces
+// ==========================================
+
+export interface BenchmarkModeResult {
+  mode_name: string;
+  description: string;
+  relevance_score: number;
+  objection_recall_rate: number;
+  strategy_awareness: number;
+  evidence_citation_coverage: number;
+  contradiction_precision: number;
+  hallucination_rate: number;
+  avg_latency_ms: number;
+  sample_recommendation: string;
+}
+
+export interface EvaluationBenchmarkResult {
+  dataset_version: string;
+  total_eval_scenarios: number;
+  run_timestamp: string;
+  mode_a_stateless: BenchmarkModeResult;
+  mode_b_hindsight: BenchmarkModeResult;
+  mode_c_outcome_aware: BenchmarkModeResult;
+}
+

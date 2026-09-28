@@ -1,7 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Customer, DealBriefing, Interaction, MemoryUnit, ChatMessage } from '../types';
-import { generateBriefing, fetchInteractions, fetchTimeline, askDealMind } from '../services/api';
+import {
+  Customer, DealBriefing, Interaction, MemoryUnit, ChatMessage,
+  StrategyAttempt, StakeholderNode, StakeholderGraphData, ContradictionRecord
+} from '../types';
+import {
+  generateBriefing, fetchInteractions, fetchTimeline, askDealMind,
+  fetchCustomerStrategies, fetchCustomerStakeholders, fetchStakeholderGraph,
+  fetchCustomerContradictions
+} from '../services/api';
 import { MemoryUsedBadge } from '../components/MemoryUsedBadge';
+import { AccountHealthBadge } from '../components/AccountHealthBadge';
+import { StrategyDnaCard } from '../components/StrategyDnaCard';
+import { StakeholderGraphView } from '../components/StakeholderGraphView';
+import { ContradictionAlertCard } from '../components/ContradictionAlertCard';
 import {
   Sparkles,
   GitBranch,
@@ -19,8 +30,12 @@ import {
   CheckCircle2,
   Users,
   Briefcase,
-  ChevronRight
+  ChevronRight,
+  Target,
+  Zap,
+  HelpCircle
 } from 'lucide-react';
+
 
 interface Props {
   customer: Customer;
@@ -47,6 +62,17 @@ export const CustomerDetailView: React.FC<Props> = ({
   const [interactions, setInteractions] = useState<Interaction[]>([]);
   const [isLoadingInteractions, setIsLoadingInteractions] = useState(false);
 
+  // Strategy DNA state
+  const [strategies, setStrategies] = useState<StrategyAttempt[]>([]);
+  const [isLoadingStrategies, setIsLoadingStrategies] = useState(false);
+
+  // Stakeholders state
+  const [stakeholders, setStakeholders] = useState<StakeholderNode[]>([]);
+  const [graphData, setGraphData] = useState<StakeholderGraphData | undefined>(undefined);
+
+  // Contradictions state
+  const [contradictions, setContradictions] = useState<ContradictionRecord[]>([]);
+
   // Chat state
   const [messages, setMessages] = useState<ChatMessage[]>([
     {
@@ -63,6 +89,9 @@ export const CustomerDetailView: React.FC<Props> = ({
     loadBriefing();
     loadTimeline();
     loadInteractions();
+    loadStrategies();
+    loadStakeholders();
+    loadContradictions();
   }, [customer.id, initialTab]);
 
   const loadBriefing = async () => {
@@ -100,6 +129,41 @@ export const CustomerDetailView: React.FC<Props> = ({
       setIsLoadingInteractions(false);
     }
   };
+
+  const loadStrategies = async () => {
+    try {
+      setIsLoadingStrategies(true);
+      const res = await fetchCustomerStrategies(customer.id);
+      setStrategies(res);
+    } catch (err) {
+      console.error('Error fetching strategies:', err);
+    } finally {
+      setIsLoadingStrategies(false);
+    }
+  };
+
+  const loadStakeholders = async () => {
+    try {
+      const [stkRes, graphRes] = await Promise.all([
+        fetchCustomerStakeholders(customer.id),
+        fetchStakeholderGraph(customer.id)
+      ]);
+      setStakeholders(stkRes);
+      setGraphData(graphRes);
+    } catch (err) {
+      console.error('Error fetching stakeholders:', err);
+    }
+  };
+
+  const loadContradictions = async () => {
+    try {
+      const res = await fetchCustomerContradictions(customer.id);
+      setContradictions(res);
+    } catch (err) {
+      console.error('Error fetching contradictions:', err);
+    }
+  };
+
 
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -160,7 +224,8 @@ export const CustomerDetailView: React.FC<Props> = ({
             <p className="text-xs text-slate-400 max-w-2xl">{customer.overview}</p>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center gap-3">
+            <AccountHealthBadge customerId={customer.id} />
             <button
               onClick={onOpenAddInteraction}
               className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-white border border-slate-700 transition-colors"
@@ -177,6 +242,7 @@ export const CustomerDetailView: React.FC<Props> = ({
             </button>
           </div>
         </div>
+
 
         {/* Snapshot Metrics Bar */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4 pt-2 text-xs">
@@ -315,7 +381,51 @@ export const CustomerDetailView: React.FC<Props> = ({
           <History className="w-4 h-4 text-slate-400" />
           <span>Touchpoint Logs ({interactions.length})</span>
         </button>
+
+        <button
+          onClick={() => setActiveTab('strategies')}
+          className={`px-4 py-2.5 text-xs font-semibold border-b-2 flex items-center gap-2 transition-all ${
+            activeTab === 'strategies'
+              ? 'border-brand-500 text-brand-300 bg-brand-500/5'
+              : 'border-transparent text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <Target className="w-4 h-4 text-indigo-400" />
+          <span>Strategy DNA ({strategies.length})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('stakeholders')}
+          className={`px-4 py-2.5 text-xs font-semibold border-b-2 flex items-center gap-2 transition-all ${
+            activeTab === 'stakeholders'
+              ? 'border-brand-500 text-brand-300 bg-brand-500/5'
+              : 'border-transparent text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <Users className="w-4 h-4 text-sky-400" />
+          <span>Stakeholder Graph ({stakeholders.length})</span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab('contradictions')}
+          className={`px-4 py-2.5 text-xs font-semibold border-b-2 flex items-center gap-2 transition-all ${
+            activeTab === 'contradictions'
+              ? 'border-brand-500 text-brand-300 bg-brand-500/5'
+              : 'border-transparent text-slate-400 hover:text-slate-200'
+          }`}
+        >
+          <AlertTriangle className="w-4 h-4 text-amber-400" />
+          <span>
+            Contradictions
+            {contradictions.filter(c => c.status === 'UNREVIEWED').length > 0 && (
+              <span className="ml-1.5 px-1.5 py-0.5 rounded-full text-[10px] bg-amber-500/30 text-amber-300 font-mono">
+                {contradictions.filter(c => c.status === 'UNREVIEWED').length}
+              </span>
+            )}
+          </span>
+        </button>
       </div>
+
 
       {/* Tab 1: AI Deal Briefing ("Prepare Me for My Next Call") */}
       {activeTab === 'briefing' && (
@@ -342,6 +452,32 @@ export const CustomerDetailView: React.FC<Props> = ({
                   {briefing.recommended_strategy}
                 </p>
 
+                {/* Outcome-Aware Strategy Shift Explanation */}
+                {briefing.strategy_changed_because && (
+                  <div className="p-4 rounded-xl bg-gradient-to-r from-amber-950/40 via-slate-900 to-amber-950/20 border border-amber-500/40 text-xs space-y-1.5 animate-fadeIn">
+                    <div className="flex items-center gap-2 text-amber-300 font-bold uppercase tracking-wider text-[11px]">
+                      <Zap className="w-4 h-4 text-amber-400" />
+                      STRATEGY CHANGED BECAUSE (Hindsight Outcome Learning)
+                    </div>
+                    <p className="text-slate-200 leading-relaxed font-medium">
+                      {briefing.strategy_changed_because}
+                    </p>
+                  </div>
+                )}
+
+                {/* Active Contradictions Alert */}
+                {briefing.contradictions_detected && briefing.contradictions_detected.length > 0 && (
+                  <div className="p-3.5 rounded-xl bg-rose-950/30 border border-rose-500/30 text-xs space-y-1">
+                    <div className="flex items-center gap-1.5 text-rose-300 font-bold">
+                      <AlertTriangle className="w-3.5 h-3.5 text-rose-400" />
+                      Active Contradictions Detected ({briefing.contradictions_detected.length}):
+                    </div>
+                    <p className="text-slate-300 text-[11px]">
+                      {briefing.contradictions_detected.map(c => c.topic).join(' • ')} — verify in the Contradictions tab.
+                    </p>
+                  </div>
+                )}
+
                 {/* Grounded Memory Citations Pill */}
                 <MemoryUsedBadge
                   memories={briefing.memories_used}
@@ -349,6 +485,7 @@ export const CustomerDetailView: React.FC<Props> = ({
                   whyRecommended="Strategy synthesized from customer objections, positive response to manufacturing ROI case study, and competitive threats recalled from Hindsight."
                 />
               </div>
+
 
               {/* What Happened & What Matters */}
               <div className="grid md:grid-cols-2 gap-4">
@@ -619,6 +756,34 @@ export const CustomerDetailView: React.FC<Props> = ({
           </div>
         </div>
       )}
+
+      {/* Tab 5: Strategy DNA Ledger */}
+      {activeTab === 'strategies' && (
+        <StrategyDnaCard
+          customerId={customer.id}
+          strategies={strategies}
+          onRefresh={loadStrategies}
+        />
+      )}
+
+      {/* Tab 6: Stakeholder Graph Visualizer */}
+      {activeTab === 'stakeholders' && (
+        <StakeholderGraphView
+          customerName={customer.name}
+          stakeholders={stakeholders}
+          graphData={graphData}
+        />
+      )}
+
+      {/* Tab 7: Contradiction Checker */}
+      {activeTab === 'contradictions' && (
+        <ContradictionAlertCard
+          customerId={customer.id}
+          contradictions={contradictions}
+          onRefresh={loadContradictions}
+        />
+      )}
     </div>
   );
 };
+

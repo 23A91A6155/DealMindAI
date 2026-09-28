@@ -18,6 +18,8 @@ import { DealsView } from './pages/DealsView';
 import { CustomersView } from './pages/CustomersView';
 import { InteractionsView } from './pages/InteractionsView';
 import { SettingsView } from './pages/SettingsView';
+import { EvaluationView } from './pages/EvaluationView';
+
 
 export function App() {
   const [activeTab, setActiveTab] = useState<string>('dashboard');
@@ -245,9 +247,12 @@ export function App() {
 
               {activeTab === 'insights' && <InsightsView />}
 
+              {activeTab === 'evaluation' && <EvaluationView />}
+
               {activeTab === 'demo' && (
                 <DemoView onRefreshGlobalData={() => loadInitialData(true)} />
               )}
+
 
               {activeTab === 'settings' && (
                 <SettingsView hindsightStatus={hindsightStatus} />
