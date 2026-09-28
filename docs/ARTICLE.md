@@ -1,13 +1,14 @@
-# STRATOVA (DealMind AI): Building an Outcome-Aware B2B Sales Intelligence Platform with Hindsight Persistent Memory
+# DealMind AI: Building an Outcome-Aware B2B Sales Intelligence Platform with Hindsight Persistent Memory
 
 ### A Deep Dive into Solving Context Amnesia, Strategy Drift, and Multi-Stakeholder Complexity in Enterprise Sales
 *Project Submission for HackWith Hyderabad 3.0*
 
-**Authors**: The STRATOVA / DealMind AI Engineering Team  
+**Authors**: The DealMind AI Engineering Team  
 **Category**: AI Agents with Persistent Memory & Longitudinal Learning  
 **Core Technologies**: Hindsight Semantic Memory Engine, FastAPI, React 19, TypeScript, Groq LLM Inference, SQLite  
 **Live Application**: [https://dealmind-ai-vitp.onrender.com](https://dealmind-ai-vitp.onrender.com)  
-**GitHub Repository**: [https://github.com/23A91A6155/STRATOVA](https://github.com/23A91A6155/STRATOVA)  
+**GitHub Repository**: [https://github.com/23A91A6155/DealMindAI](https://github.com/23A91A6155/DealMindAI)  
+
 
 ---
 

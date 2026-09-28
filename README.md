@@ -1,4 +1,4 @@
-# STRATOVA (DealMind AI)
+# DealMind AI
 ### Memory-Powered Outcome-Aware B2B Sales Intelligence Platform
 **Tagline**: *"Don't just close deals. Remember how."*  
 **Subtitle**: *"Your outcome-aware sales memory that gets smarter with every conversation."*  
@@ -13,11 +13,12 @@ Built for **HackWith Hyderabad 3.0** — demonstrating persistent memory and lon
 |---|---|
 | **Public Live Demo** | **[https://dealmind-ai-vitp.onrender.com](https://dealmind-ai-vitp.onrender.com)** |
 | **Health Check URL** | **[https://dealmind-ai-vitp.onrender.com/api/health](https://dealmind-ai-vitp.onrender.com/api/health)** *(Live Hindsight Connected)* |
-| **GitHub Repository** | **[https://github.com/23A91A6155/STRATOVA](https://github.com/23A91A6155/STRATOVA)** |
+| **GitHub Repository** | **[https://github.com/23A91A6155/DealMindAI](https://github.com/23A91A6155/DealMindAI)** |
 | **Evaluation Benchmark** | **[https://dealmind-ai-vitp.onrender.com/api/evaluation/benchmark](https://dealmind-ai-vitp.onrender.com/api/evaluation/benchmark)** |
 | **Demo Video** | `https://youtu.be/dealmind-ai-demo` *(Script: [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md))* |
 | **Technical Article** | Published at [`docs/ARTICLE.md`](docs/ARTICLE.md) |
 | **Social Announcement** | Published at [`docs/SOCIAL_POST.md`](docs/SOCIAL_POST.md) |
+
 
 
 ---
