@@ -1,7 +1,7 @@
-# DealMind AI
-### Memory-Powered Sales Intelligence Agent
+# STRATOVA (DealMind AI)
+### Memory-Powered Outcome-Aware B2B Sales Intelligence Platform
 **Tagline**: *"Don't just close deals. Remember how."*  
-**Subtitle**: *"Your sales memory that gets smarter with every conversation."*  
+**Subtitle**: *"Your outcome-aware sales memory that gets smarter with every conversation."*  
 
 Built for **HackWith Hyderabad 3.0** — demonstrating persistent memory and longitudinal learning using **Hindsight**.
 
@@ -13,10 +13,12 @@ Built for **HackWith Hyderabad 3.0** — demonstrating persistent memory and lon
 |---|---|
 | **Public Live Demo** | **[https://dealmind-ai-vitp.onrender.com](https://dealmind-ai-vitp.onrender.com)** |
 | **Health Check URL** | **[https://dealmind-ai-vitp.onrender.com/api/health](https://dealmind-ai-vitp.onrender.com/api/health)** *(Live Hindsight Connected)* |
-| **GitHub Repository** | **[https://github.com/23A91A6155/DealMindAI](https://github.com/23A91A6155/DealMindAI)** |
+| **GitHub Repository** | **[https://github.com/23A91A6155/STRATOVA](https://github.com/23A91A6155/STRATOVA)** |
+| **Evaluation Benchmark** | **[https://dealmind-ai-vitp.onrender.com/api/evaluation/benchmark](https://dealmind-ai-vitp.onrender.com/api/evaluation/benchmark)** |
 | **Demo Video** | `https://youtu.be/dealmind-ai-demo` *(Script: [`docs/VIDEO_SCRIPT.md`](docs/VIDEO_SCRIPT.md))* |
 | **Technical Article** | Published at [`docs/ARTICLE.md`](docs/ARTICLE.md) |
 | **Social Announcement** | Published at [`docs/SOCIAL_POST.md`](docs/SOCIAL_POST.md) |
+
 
 ---
 
@@ -105,6 +107,12 @@ flowchart TD
 ## 4. Key Features
 
 - **Memory Timeline (Star Feature)**: Visual chronological demonstration of knowledge accumulation from Meeting 1 to current.
+- **Strategy DNA Ledger**: Tracks pitch attempts, customer pushback, and win rate metrics (4 Won / 1 Lost) with inline outcome recording into Hindsight memory.
+- **Stakeholder Memory Graph**: Interactive SVG network topology mapping power dynamics (Decision Makers, Evaluators, Procurement, Champions), individual priorities, and historical strategy responses.
+- **Customer Contradiction Checker**: Automated detection of cross-turn statement shifts (e.g. approved budget shifting to capital freeze) with verification workflows.
+- **Evidence-Grounded Briefings with "⚡ STRATEGY CHANGED BECAUSE"**: Synthesizes why previous pitches failed and dynamically pivots talk tracks and commercial packaging.
+- **Account Memory Health Diagnostics**: Live health status badge (`FRESH`, `NEEDS_REVIEW`, `OUTDATED`) with telemetry on meetings, memories, and contradictions.
+- **Reproducible Evaluation Suite**: Live comparative benchmark evaluating Mode A (Stateless), Mode B (Hindsight Memory), and Mode C (STRATOVA Outcome-Aware).
 - **AI Deal Briefing ("Prepare Me for My Next Call")**: One-click strategic briefing synthesizing What Happened, What Matters, Main Risks, Competitors, Proven Messaging, Talking Points, Questions to Ask, and Concrete Next Actions.
 - **Ask DealMind (Memory Chat)**: Interactive assistant displaying explicit, clickable **"Memories Used"** badges and a *"Why did DealMind recommend this?"* explanation drawer.
 - **Save & Learn Interaction Capture**: Form that saves meeting notes, triggers the *"Learning..."* retain animation, and instantly updates the memory bank.
@@ -113,6 +121,7 @@ flowchart TD
 - **Macro AI Insights & Memory-to-Strategy Loop**: Longitudinal analysis of repeated objections, high-converting messaging, and deal risks across all accounts.
 - **Judge Mode**: Compact 60-second orientation modal for hackathon judges summarizing the problem, solution, memory architecture, and scoring criteria.
 - **Hindsight Status Indicator**: Real-time badge showing `● Hindsight Connected` or `● Demo Memory Mode` with diagnostics modal.
+
 
 ---
 
